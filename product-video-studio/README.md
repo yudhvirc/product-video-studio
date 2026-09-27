@@ -8,29 +8,27 @@ rendered with Blender Cycles. Products are matched to the real piece, including 
 
 ### On any machine (from GitHub)
 
-The repo is private, so sign that machine in to GitHub first (one time). Then add the marketplace and install
-the plugin. Run in a terminal (PowerShell or Git Bash):
+The repo is public: no GitHub account or sign-in is needed. Use the **HTTPS** URL. The short form
+`yudhvirc/product-video-studio` clones over SSH and fails with "Host key verification failed" on machines
+without SSH set up.
 
+In a terminal (PowerShell or Git Bash):
 ```bash
-# 1. Sign in to GitHub so the private repo can be cloned (one time)
-#    (no gh yet? winget install --id GitHub.cli -e, then open a new terminal)
-gh auth login
-gh auth setup-git
-
-# 2. Add the marketplace and install the plugin
-claude plugin marketplace add yudhvirc/product-video-studio
+claude plugin marketplace add https://github.com/yudhvirc/product-video-studio.git
 claude plugin install product-video-studio@tathastu-tools
-
-# 3. Check it's installed
 claude plugin list
 ```
 
-If you're already inside Claude Code, use these instead of step 2:
+Or inside Claude Code:
 ```text
-/plugin marketplace add yudhvirc/product-video-studio
+/plugin marketplace add https://github.com/yudhvirc/product-video-studio.git
 /plugin install product-video-studio@tathastu-tools
 /reload-plugins
 ```
+
+Easiest for non-technical users: in Claude Code, just say
+*"Install the product-video-studio plugin from https://github.com/yudhvirc/product-video-studio"* and let
+Claude run the steps.
 
 ### On the machine that has the source folder
 
