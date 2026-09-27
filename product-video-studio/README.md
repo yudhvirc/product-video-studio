@@ -30,6 +30,29 @@ Easiest for non-technical users: in Claude Code, just say
 *"Install the product-video-studio plugin from https://github.com/yudhvirc/product-video-studio"* and let
 Claude run the steps.
 
+### With PowerShell (no git)
+
+Open **PowerShell** (Start → type "PowerShell" → Enter), paste this line and press Enter:
+
+```powershell
+irm https://raw.githubusercontent.com/yudhvirc/product-video-studio/main/install.ps1 | iex
+```
+
+It downloads the latest release and installs it into `%USERPROFILE%\.claude\skills\product-video-studio`.
+Restart Claude Code afterwards. **Run the same line again to update.** An old copy is moved to `%TEMP%`, not
+deleted. The script is [`install.ps1`](../install.ps1) at the repo root, if you want to read it first.
+
+Or run the steps yourself:
+```powershell
+$skills = "$env:USERPROFILE\.claude\skills"
+New-Item -ItemType Directory -Force -Path $skills | Out-Null
+Invoke-WebRequest -UseBasicParsing -OutFile "$env:TEMP\product-video-studio.zip" `
+  -Uri https://github.com/yudhvirc/product-video-studio/releases/latest/download/product-video-studio.zip
+Expand-Archive "$env:TEMP\product-video-studio.zip" -DestinationPath $skills -Force
+```
+
+The marketplace commands above also work as-is in PowerShell.
+
 ### Without git (download a zip)
 
 No commands and no git needed:
