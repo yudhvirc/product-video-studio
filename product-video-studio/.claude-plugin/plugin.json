@@ -1,0 +1,9 @@
+{
+  "name": "product-video-studio",
+  "description": "Photoreal 3D product videos (cinematic ad + seamless turntable) of jewelry and crystal products from photos, with Blender: guided interview, spec-driven engine with realistic imperfections, preview/proof/final pipeline, and batch processing.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Tathastu",
+    "email": "info@acesystemdesign.com"
+  }
+}

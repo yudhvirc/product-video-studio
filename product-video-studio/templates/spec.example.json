@@ -1,0 +1,36 @@
+{
+  "name": "Sunstone Butterfly Bracelet",
+  "seed": 7,
+  "product": {
+    "type": "bracelet",
+    "sequence": ["bead:sunstone x10", "rondelle", "bead:sunstone x2", "charm:butterfly",
+                 "bead:sunstone x2", "rondelle", "bead:sunstone x4"],
+    "front": "charm:butterfly",
+    "beads": {
+      "sunstone": {"diameter_mm": 10, "material": "sunstone"}
+    },
+    "parts": {
+      "rondelle": {"type": "rondelle", "od_mm": 8, "thick_mm": 4, "metal": "antique_brass"},
+      "butterfly": {
+        "type": "photo_charm", "photo": "photos/butterfly_closeup.png",
+        "width_mm": 11.3, "thread": "vertical", "axis_x_px": 232, "axis_y_px": 172,
+        "body": {"width_mm": 2.24, "length_mm": 7.1, "height_mm": 0.95, "offset_mm": -0.55},
+        "metal": "antique_brass"
+      }
+    },
+    "cord": {"diameter_mm": 0.9, "color": [0.85, 0.83, 0.78], "visible_gaps": 3}
+  },
+  "materials": {
+    "sunstone": {
+      "pattern": "fibrous",
+      "palette": [[0.30, [0.26, 0.085, 0.03]], [0.42, [0.38, 0.14, 0.055]], [0.52, [0.48, 0.22, 0.11]],
+                  [0.62, [0.60, 0.34, 0.20]], [0.76, [0.80, 0.60, 0.44]]],
+      "flecks": {"density": 0.28, "color": [1.0, 0.52, 0.24]},
+      "translucency": 0.25,
+      "inclusions": 0.25
+    }
+  },
+  "look": {"backdrop": "studio_white", "grain": true, "vignette": false},
+  "output": {"aspect": "16:9", "fps": 30},
+  "videos": {"ad": {"seconds": 15}, "turntable": {"seconds": 8}}
+}

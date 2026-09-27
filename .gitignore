@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.pvs_work/
+*.blend
+*.blend1

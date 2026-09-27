@@ -1,0 +1,15 @@
+{
+  "name": "tathastu-tools",
+  "description": "Tathastu in-house Claude Code plugins",
+  "owner": {
+    "name": "Tathastu",
+    "email": "info@acesystemdesign.com"
+  },
+  "plugins": [
+    {
+      "name": "product-video-studio",
+      "source": "./product-video-studio",
+      "description": "3D product videos (ad + turntable) from product photos, single or batch"
+    }
+  ]
+}
