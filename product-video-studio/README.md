@@ -24,8 +24,17 @@ ffmpeg, Node.js, and bash (Git Bash on Windows).
 | "Make videos for all the new products in C:\temp\tathastumedia\products" | `/product-video-studio:product-video-batch` |
 | "How far along is the batch render?" | batch (runs `batch.sh status`) |
 
-Both skills interview you first, show preview stills and side-by-sides with your photos, then a quick proof
-video, and only then run the multi-hour final render.
+Both skills interview you first, then go through **hard approval gates**:
+
+| Gate | You approve | Unlocks |
+|---|---|---|
+| plan | The drafted spec (sequence, stones, look, videos, time estimate) | preview stills |
+| stills | Preview stills and side-by-sides with your photos | proof video |
+| proof | The low-res proof videos, plus the final time estimate | final render |
+| delivery | The finished videos | done |
+
+Every decision is appended to `<product>/approvals.md` with your own words. The tools refuse to render past an
+unapproved gate, and any change to the spec or engine after an approval requires a fresh one.
 
 ## Products folder
 
@@ -56,6 +65,8 @@ products/
 
 ```bash
 tools/check_env.sh                                   # find Blender / ffmpeg
+tools/approve.sh  <product_dir> plan|stills|proof|delivery approved|changes|stopped "<user's words>"
+tools/approve.sh  <product_dir> check stills|proof|final | show
 tools/render.sh   <product_dir> stills|proof|final|high [ad|turntable|both]
 tools/checks.sh   <product_dir> charms|sheet|proofsheet
 tools/batch.sh    <products_root> status|stills|proof|final|contact [slug ...]

@@ -21,6 +21,8 @@ PROD="$(cd "${1:?product dir}" && pwd)"
 Q="${2:?stills|proof|final|high}"
 KINDS="${3:-both}"; [ "$KINDS" = both ] && KINDS="ad turntable"
 SPEC="$PROD/spec.json"; [ -f "$SPEC" ] || { echo "no spec.json in $PROD"; exit 1; }
+# approval gates: plan -> stills -> proof -> final (see approve.sh); exit 3 = awaiting approval
+"$HERE/approve.sh" "$PROD" check "$Q" || exit 3
 eval "$("$HERE/check_env.sh" | grep -E '^PVS_')"
 B="$PVS_BLENDER"
 SLUG="$(basename "$PROD")"

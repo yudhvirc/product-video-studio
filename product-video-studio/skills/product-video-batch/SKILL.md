@@ -42,27 +42,45 @@ photos show) and confirm it before moving anything.
    and set up `photo_charm` parts from close-ups.
    Then show **one consolidated table** (product · type · stone · beads · sequence · front · open issues) and ask
    only the genuinely uncertain points, grouped. **Missing close-ups block that product:** list exactly which
-   photos are needed and keep rendering the others. Don't invent components.
+   photos are needed and keep going with the others. Don't invent components.
+   **→ Gate `plan`** for the batch (see below). Nothing renders before it.
 
 4. **Stills for all:** `batch.sh <root> stills` (about 1–2 min per product), then `batch.sh <root> contact` and
    `checks.sh <dir> charms|sheet` per product. Run the quality checklist on every product yourself. Fix, then
    present: the contact sheet first, then per-product sheets and side-by-sides for anything new or doubtful.
-   Iterate per product; approved products can proceed while others are being fixed.
+   **→ Gate `stills`** for the batch. Products with requested changes get fixed, re-rendered and re-asked, while
+   approved ones move on.
 
-5. **Proofs (recommended for new product types):** `batch.sh <root> proof <slug>...` in the background (about
-   25 min per product for 15 s + 8 s). Review the proof sheets and share them.
+5. **Proofs (required before any final):** `batch.sh <root> proof` in the background (about 25 min per product
+   for 15 s + 8 s). It renders only products whose stills are approved and reports the rest as "awaiting
+   approval". Review the proof sheets and share the videos. **→ Gate `proof`** for the batch, with the
+   final-queue estimate in the Approve option: Σ frames × ~12 s (e.g. 10 products × 690 frames ≈ 23 h).
+   Offer to run overnight, split into sessions, or cut lengths or fps.
 
-6. **Final queue**, on an explicit go only. Give the estimate: Σ frames × ~12 s (e.g. 10 products × 690 frames
-   ≈ 23 h). Offer to run overnight, split into sessions, or cut lengths or fps. Run `batch.sh <root> final
-   [slugs]` in the background. Products render sequentially (parallel runs only slow each other down). Report
-   progress with `batch.sh <root> status`. The queue is resumable: after an interruption or reboot, run the
-   same command again.
+6. **Final queue:** `batch.sh <root> final` in the background. It renders only products with an approved proof
+   of their current spec. Products render sequentially (parallel runs only slow each other down). Report
+   progress with `batch.sh <root> status` (its last column shows how far each product's approvals allow it to
+   go). The queue is resumable: after an interruption or reboot, run the same command again.
 
 7. **Deliver:** verify every latest `final/vN/*.mp4` (ffprobe duration, frames, resolution; look at a few frames) and give
-   a table of product → files. Add any newly approved stone looks to `_library/stones.json`.
+   a table of product → files. **→ Gate `delivery`** for the batch. Add any newly approved stone looks to
+   `_library/stones.json`.
+
+## Approval gates for a batch (mandatory)
+
+The gates, rules and tool enforcement are exactly those in the single-product skill's "Approval gates" section:
+read it. Batch specifics:
+- One AskUserQuestion per stage covers every product that reached it. List the products and their preview/proof
+  paths in the question text. Options: **"Approve all listed – continue to <next> (<estimate>)"** ·
+  **"Approve some – I'll name the exceptions"** · **"Request changes"** · **"Stop here"**.
+- Record the decision **per product**:
+  `approve.sh <root>/<slug> <gate> <approved|changes|stopped> "<the user's words>"`. For "approve some",
+  products the user excluded get `changes` with their words, and the rest get `approved`.
+- Never record an approval for a product the user didn't cover. Products that miss a gate simply wait: the
+  tools skip them and `batch.sh status` shows how far each may go.
 
 ## Batch etiquette
-- One approval gate per stage for the whole batch, not per product, unless a product has problems.
+- One approval question per stage for the whole batch, with decisions recorded per product.
 - Keep the user informed with short status lines during long runs (product n of N, ETA).
 - Never delete or overwrite anything in the product folders (the user asked for this). Outputs are versioned,
   and if a cleanup seems needed, ask first.

@@ -31,13 +31,41 @@ for a proof and 2–3 h for a final.
 4. **Colours are confirmed by eye, side by side with the photo.** Measurements help, but pixel filters bias them.
    Use `sample_palette.py` for a start, then iterate with preview stills.
 5. **All metals on one piece should match** unless the user says otherwise (e.g. rondelles vs charm).
-6. **Gates:** stills → user OK → proof video → user OK → final. Never start a long render without an explicit go.
-   Always state the time estimate. Never edit a script while a render is using it.
+6. **Hard approval gates:** plan → stills → proof → final → delivery. See "Approval gates" below. Tools refuse
+   to render past an unapproved gate. Always state the time estimate. Never edit a script while a render is
+   using it.
 7. **Never delete or overwrite anything in the user's project or product folders**, including files you made
    earlier. The tools already write each run to a new version folder (`previews/vN`, `proofs/vN`, `final/vN`)
    and keep frames and .blend files in a cache outside the project (`%LOCALAPPDATA%/pvs_work/<slug>`). When
    re-encoding or fixing, write alongside and never on top. If a cleanup seems really needed, ask first. (The
    user explicitly asked for this.)
+
+## Approval gates (mandatory)
+
+Four gates, each asked with **AskUserQuestion** and recorded with
+`bash ${CLAUDE_PLUGIN_ROOT}/tools/approve.sh <dir> <gate> <approved|changes|stopped> "<the user's own words>"`:
+
+| Gate | Show the user first | Unlocks |
+|---|---|---|
+| `plan` | A summary of spec.json: product, stones, sequence, front piece, look/backdrop, aspect, videos + lengths, fps, quality, time estimate for stills/proof/final, and any assumptions | stills |
+| `stills` | The paths of the latest `previews/vN`: the `_sheet.png`, the charm side-by-sides, and your checklist notes | proof |
+| `proof` | The paths of the latest `proofs/vN/*.mp4` and the proof sheets, plus the final-render time estimate and fps | final |
+| `delivery` | The paths of the latest `final/vN/*.mp4` and the ffprobe facts | done |
+
+The gate question always offers:
+**"Approve – continue to <next stage> (<time estimate>)"** · **"Request changes"** · **"Stop here"**.
+
+Rules:
+- Record exactly what the user chose, quoting their words (including notes they typed). "Request changes" →
+  `changes` → make the fixes → re-render that stage → ask the same gate again. "Stop here" → `stopped` →
+  finish the turn.
+- Only the user's own answer approves a gate. Never approve on their behalf, never infer approval from silence,
+  a background-task notification, an earlier gate, or "looks nice" said about something else. A clear chat
+  message that names the stage ("stills approved, go ahead with the proof") counts. Record it verbatim.
+- Stills and proof approvals are tied to a fingerprint of the spec and engine. Any later change to the spec
+  (even a palette nudge) or the engine needs a fresh render and a fresh approval; the tools enforce this.
+- Before the `plan` gate, nothing is rendered (stills included). Palette sampling and reading photos are fine.
+- `approve.sh <dir> show` prints the log; `approve.sh <dir> check <stage>` says whether a stage may run.
 
 ## Workflow
 
@@ -66,22 +94,31 @@ Write `<slug>/spec.json` (format: `reference/spec-reference.md`, example: `templ
   cord runs in the photo. Add `body` for a raised centre body.
 - Unsupported product type → `reference/custom-products.md`.
 
+**→ Gate `plan`:** summarise the spec and ask. Record the answer. Revise and ask again until it's approved.
+
 ### 4. Preview stills (≈1–2 min)
-`bash ${CLAUDE_PLUGIN_ROOT}/tools/render.sh <dir> stills` (writes `previews/vN/`), then `checks.sh <dir> sheet` and
+Needs an approved `plan` gate. Run `bash ${CLAUDE_PLUGIN_ROOT}/tools/render.sh <dir> stills` (writes `previews/vN/`), then `checks.sh <dir> sheet` and
 `checks.sh <dir> charms` (both add files to the latest `previews/vN`).
 Read the images and go through `reference/quality-checklist.md` yourself **before** showing the user. Fix and
 re-render until it passes, then show the user the sheet plus the side-by-sides. Expect 1–3 rounds for a new
 stone type.
 
+**→ Gate `stills`:** ask. On `changes`: fix, re-render stills (a new `previews/vN`), and ask again.
+
 ### 5. Proof videos (≈25 min for 15 s + 8 s)
-Only after the user OKs the stills: `render.sh <dir> proof` in the background, then `checks.sh <dir> proofsheet`,
+Needs an approved `stills` gate. Run `render.sh <dir> proof` in the background, then `checks.sh <dir> proofsheet`,
 review, and hand the user the latest `proofs/vN/*.mp4`. Mention that proofs are half-res and slightly noisy by design.
 
+**→ Gate `proof`:** ask. Include the final-render time estimate and fps in the Approve option.
+
 ### 6. Final
-Only on an explicit go with the frame rate confirmed: `render.sh <dir> final` in the background (use `high` only
-if asked). Check progress with `batch.sh <products_root> status` (it counts cached frames). When it finishes, verify with ffprobe
+Needs an approved `proof` gate. Run `render.sh <dir> final` in the background (use `high` only if the user
+chose it at a gate). Check progress with `batch.sh <products_root> status` (it counts cached frames). When it finishes, verify with ffprobe
 (duration, frame count, resolution) and look at a few frames. Then deliver the latest `final/vN/*.mp4` with a short summary.
 If interrupted, re-run the same command and it resumes.
+
+**→ Gate `delivery`:** ask whether the videos are accepted. On `changes`, go back to the stage the change
+affects. A spec change means new stills → stills gate → proof → proof gate → final.
 
 ### 7. Capture what was learned
 If the user approved a new stone look, add it to `<products_root>/_library/stones.json` (with a `status` note) so
