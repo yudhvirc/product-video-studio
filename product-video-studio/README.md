@@ -6,15 +6,69 @@ rendered with Blender Cycles. Products are matched to the real piece, including 
 
 ## Install
 
+### On any machine (from GitHub)
+
+The repo is private, so sign that machine in to GitHub first (one time). Then add the marketplace and install
+the plugin. Run in a terminal (PowerShell or Git Bash):
+
+```bash
+# 1. Sign in to GitHub so the private repo can be cloned (one time)
+#    (no gh yet? winget install --id GitHub.cli -e, then open a new terminal)
+gh auth login
+gh auth setup-git
+
+# 2. Add the marketplace and install the plugin
+claude plugin marketplace add yudhvirc/product-video-studio
+claude plugin install product-video-studio@tathastu-tools
+
+# 3. Check it's installed
+claude plugin list
+```
+
+If you're already inside Claude Code, use these instead of step 2:
+```text
+/plugin marketplace add yudhvirc/product-video-studio
+/plugin install product-video-studio@tathastu-tools
+/reload-plugins
+```
+
+### On the machine that has the source folder
+
 ```text
 /plugin marketplace add C:\temp\tathastumedia\plugins
 /plugin install product-video-studio@tathastu-tools
 ```
-After editing the plugin, run `/reload-plugins` (or `/plugin marketplace update tathastu-tools`).
-Validate with `claude plugin validate C:\temp\tathastumedia\plugins`.
+Validate after editing with `claude plugin validate C:\temp\tathastumedia\plugins`.
 
-Requirements (checked by `tools/check_env.sh`): Blender 5.x (the portable build in `C:\tools` is fine),
-ffmpeg, Node.js, and bash (Git Bash on Windows).
+### Updates
+
+After a new version is pushed (bump `version` in `.claude-plugin/plugin.json`):
+```bash
+claude plugin marketplace update tathastu-tools
+claude plugin update product-video-studio@tathastu-tools
+```
+Then run `/reload-plugins`, or restart Claude Code.
+
+### Requirements for rendering
+
+These are checked by `tools/check_env.sh`. The skills report anything missing and ask before installing:
+- Blender 5.x: the portable zip unpacked in `C:\tools\` is fine. Use a mirror such as
+  `https://mirrors.ocf.berkeley.edu/blender/release/Blender5.2/` (winget's Blender download can 403) and
+  check the SHA-256.
+- ffmpeg: `winget install --id Gyan.FFmpeg -e`
+- Node.js LTS
+- bash: Git Bash on Windows
+
+### Troubleshooting: "claude is not recognized"
+
+If `claude` only works when you type its full path, its folder isn't on your PATH. Add it once in PowerShell,
+then open a new terminal:
+```powershell
+$dir = "$env:USERPROFILE\.local\bin"   # folder containing claude.exe (npm installs: $env:APPDATA\npm)
+$old = [Environment]::GetEnvironmentVariable("Path", "User")
+if (($old -split ";") -notcontains $dir) { [Environment]::SetEnvironmentVariable("Path", "$old;$dir", "User") }
+```
+Check with `claude --version` from any folder. `claude doctor` shows where Claude Code is installed.
 
 ## Use
 
