@@ -30,6 +30,23 @@ Easiest for non-technical users: in Claude Code, just say
 *"Install the product-video-studio plugin from https://github.com/yudhvirc/product-video-studio"* and let
 Claude run the steps.
 
+## Install without git (download a zip)
+
+No commands and no git needed:
+
+1. Download the plugin:
+   **https://github.com/yudhvirc/product-video-studio/releases/latest/download/product-video-studio.zip**
+2. Open File Explorer, click the address bar, type `%USERPROFILE%\.claude` and press Enter. If there's no
+   `skills` folder there, create one (right-click → New → Folder → `skills`).
+3. Right-click the downloaded zip → **Extract All…** → **Browse…** → choose that `skills` folder → **Extract**.
+   Check that the result is `C:\Users\<you>\.claude\skills\product-video-studio\`, and that it contains a
+   `.claude-plugin` folder. If Windows added an extra `product-video-studio` level, move the inner folder up
+   one level.
+4. Restart Claude Code. The plugin loads in every session.
+
+To update, delete `C:\Users\<you>\.claude\skills\product-video-studio` and repeat the steps with the latest
+zip. Use either this method or the marketplace install above, not both, to avoid loading the plugin twice.
+
 ## Update
 
 ```bash

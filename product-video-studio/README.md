@@ -30,6 +30,24 @@ Easiest for non-technical users: in Claude Code, just say
 *"Install the product-video-studio plugin from https://github.com/yudhvirc/product-video-studio"* and let
 Claude run the steps.
 
+### Without git (download a zip)
+
+No commands and no git needed:
+
+1. Download the plugin:
+   **https://github.com/yudhvirc/product-video-studio/releases/latest/download/product-video-studio.zip**
+2. Open File Explorer, click the address bar, type `%USERPROFILE%\.claude` and press Enter. If there's no
+   `skills` folder there, create one (right-click → New → Folder → `skills`).
+3. Right-click the downloaded zip → **Extract All…** → **Browse…** → choose that `skills` folder → **Extract**.
+   Check that the result is `C:\Users\<you>\.claude\skills\product-video-studio\`, and that it contains a
+   `.claude-plugin` folder. If Windows added an extra `product-video-studio` level, move the inner folder up
+   one level.
+4. Restart Claude Code. The plugin loads in every session (`claude plugin list` shows
+   `product-video-studio@skills-dir`).
+
+To update, delete that folder and repeat the steps with the latest zip. Use either this method or the
+marketplace install, not both, to avoid loading the plugin twice.
+
 ### On the machine that has the source folder
 
 ```text
@@ -46,6 +64,17 @@ claude plugin marketplace update tathastu-tools
 claude plugin update product-video-studio@tathastu-tools
 ```
 Then run `/reload-plugins`, or restart Claude Code.
+
+### Releasing a new version (maintainer)
+
+Bump `version` in `.claude-plugin/plugin.json`, then commit and push. Then publish the plugin-only zip that
+the download link serves. From the repo root:
+```bash
+V=1.2.0   # the new version
+git archive --format=zip --prefix=product-video-studio/ HEAD:product-video-studio -o product-video-studio.zip
+gh release create v$V product-video-studio.zip --title "product-video-studio $V" --notes "..."
+```
+The `releases/latest/download/product-video-studio.zip` link then serves the new zip.
 
 ### Requirements for rendering
 
